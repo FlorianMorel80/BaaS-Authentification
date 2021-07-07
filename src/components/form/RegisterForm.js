@@ -1,5 +1,5 @@
 // *************** React Components*****************************
-import React, {useState} from 'react';
+import React, {useState, useContext} from 'react';
 import {
   ScrollView,
   Text,
@@ -15,6 +15,8 @@ import {useForm, Controller} from 'react-hook-form';
 import {yupResolver} from '@hookform/resolvers/yup';
 // import Input from "@material-ui/core/Input";
 import * as yup from 'yup';
+
+import {AuthContext} from '../../redux/contexts/AuthContext';
 // *************************************************************
 
 // ----------------------------REGEX--------------------------------
@@ -54,6 +56,11 @@ const RegisterForm = ({navigation}) => {
   } = useForm({
     resolver: yupResolver(schema),
   });
+
+  const {signUp} = useContext(AuthContext);
+  function registerUser(data) {
+    signUp(data);
+  }
 
   //*********/ Afficher ou cacher le mot de passe********
   const [hidePass, setHidePass] = useState(true);
@@ -179,7 +186,7 @@ const RegisterForm = ({navigation}) => {
           {/* ************************* BUTTON ************************ */}
           <TouchableOpacity
             style={styles.button}
-            onPress={handleSubmit(onSubmit)}>
+            onPress={handleSubmit(registerUser)}>
             <Text style={styles.title}>S'inscrire</Text>
           </TouchableOpacity>
           <View style={styles.loginText}>

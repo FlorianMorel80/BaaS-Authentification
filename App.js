@@ -1,41 +1,34 @@
-import React, {useEffect} from 'react';
-import {StyleSheet, View, Text} from 'react-native';
-import { NavigationContainer } from "@react-navigation/native"
+import 'react-native-gesture-handler';
+import React, {useReducer, useMemo} from 'react';
+import {reducer} from './src/redux/reducers/reducer';
+import {getActions} from './src/redux/actions/authActions';
+import { AuthContext } from './src/redux/contexts/AuthContext';
+import { getApp } from './src/database/realmApp';
 
 //-------------------- Personal components ---------------
 import TabNavigation from './src/components/navigation/TabNavigation';
-
-import openRealm from './src/database/openRealm';
+import NavigationRoot from './src/components/navigation/NavigationRoot'
 // --------------------------------------------------------
 
 const App = () => {
 
-  useEffect(() => {
-    const bootstrapSync = async () => {
-      const realm = await openRealm();
+  const [state, dispatch] = useReducer(reducer, {
+    isLoading: true,
+    isSignout: false,
+    userId: null,
+  });
 
-      console.log('ok');
-    };
-
-    bootstrapSync();
+  const authContext = useMemo(() => {
+    const app = getApp();
+    return getActions(app, dispatch);
   }, []);
 
     return (
-			<View style={styles.container}>
-        <TabNavigation/>
-			</View>
-
-
+      <AuthContext.Provider value={authContext}>
+        <NavigationRoot userId={state.userId}/>
+      </AuthContext.Provider>
     );
 };
 
-
-const styles = StyleSheet.create({
-  container: {
-    flex:1,
-    backgroundColor: '#F5F5F5',
- 
-  },
-});
 
 export default App;

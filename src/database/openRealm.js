@@ -1,7 +1,7 @@
 import Realm from 'realm';
 import UserSchema from '../schema/userSchema';
 import TaskSchema from '../schema/taskSchema';
-import { getRealmApp } from './realmApp';
+import { getApp } from './realmApp';
 
 async function anonymousLogin() {
   let user;
@@ -19,7 +19,7 @@ async function anonymousLogin() {
 async function openRealm() {
   let user;
   let realm;
-  const app = getRealmApp(); 
+  const app = getApp(); 
   try {
     user = await anonymousLogin();
 
