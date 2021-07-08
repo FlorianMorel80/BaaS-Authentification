@@ -40,10 +40,6 @@ const schema = yup.object().shape({
     )
     .required('Ce champs est requis'),
 
-    // Confirm password
-  passwordVerify: yup.string()
-    .oneOf([yup.ref('password'),null], 'Les mots de passe ne correspondent pas')
-    .required('Champs requis'),
 });
 
 const LoginForm = ({navigation}) => {
@@ -91,11 +87,13 @@ const LoginForm = ({navigation}) => {
     <ScrollView>
       <View style={styles.background}>
         <View style={styles.container}>
-        <Text style={{fontWeight:'bold', fontSize:24, color: 'lightblue'}}>CONNEXION</Text>
+        <Text style={{fontWeight:'bold', fontSize:24, color: 'black'}}>CONNEXION</Text>
+        <View style={{width:190, height:190,borderRadius:1000, overflow:'hidden'}}>
           <Image
             source={require('../../../assets/img/mobileLogin.gif')}
             style={styles.image}
           />
+        </View>
           {/* ************************* MAIL ************************ */}
           <View style={styles.emailBox}>
             <Controller
@@ -137,7 +135,7 @@ const LoginForm = ({navigation}) => {
                 />
               )}
               name="password"
-              defaultValue=""
+              defaultValue="Abcdef1!"
             />
             <Icon
               name={hidePass ? 'eye-off' : 'eye'}
@@ -161,7 +159,7 @@ const LoginForm = ({navigation}) => {
           {/* ************************* BUTTON ************************ */}
           <TouchableOpacity
             style={styles.button}
-            onPress={handleSubmit(onSignIn)}>
+            onPress={() => handleSubmit(onSignIn)()}>
             <Text style={styles.title}>Me connecter</Text>
           </TouchableOpacity>
           <View style={styles.loginText}>
@@ -189,15 +187,16 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 25,
-    backgroundColor: '#FEFEFE',
+    // backgroundColor: '#FEFEFE',
     padding: 5,
     width: '97%',
-    marginTop: '35%',
+    marginTop: '20%',
   },
   image: {
     flex: 1,
     height: 200,
     width: 200,
+    borderRadius:200
   },
   emailBox: {
     flex: 1,

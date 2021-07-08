@@ -4,8 +4,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
 // ************Components ********************
-import ListScreen from '../../../screen/ListScreen';
-
+import TasksContainer from '../../TasksEpic/TasksContainer';
 // ******************************************
 const Stack = createStackNavigator();
 
@@ -15,11 +14,11 @@ const ToDoNavigationScreen = (props, { navigation, route}) => {
 
             <Stack.Navigator>
                 <Stack.Screen
-                    name="ListScreen"
+                    name="TasksContainer"
                     options={{
                         header: ()=> null,
                     }} 
-                    component={ListScreen}/>
+                    component={TasksContainer}/>
 
                 {/* <Stack.Screen
                 name="RegisterScreen"

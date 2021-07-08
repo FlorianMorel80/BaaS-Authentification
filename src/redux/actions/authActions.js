@@ -24,6 +24,7 @@ export function getActions(app, dispatch) {
 
     signUp: async data => {
       const {email, password} = data;
+      console.log('singnup');
       try {
         await app.emailPasswordAuth.registerUser(email, password);
 

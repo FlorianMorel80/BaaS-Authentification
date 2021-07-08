@@ -23,7 +23,7 @@ const LogNavigationScreen = (props, { navigation, route}) => {
             <Stack.Screen
             name="RegisterScreen"
             options={{
-                title:'Retourner à la page de connexion'
+                header: ()=> null,
             }} 
             component={RegisterScreen} />
         </Stack.Navigator>

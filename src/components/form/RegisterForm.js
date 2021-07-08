@@ -88,11 +88,13 @@ const RegisterForm = ({navigation}) => {
     <ScrollView>
       <View style={styles.background}>
         <View style={styles.container}>
-        <Text style={{fontWeight:'bold', fontSize:24, color: 'lightblue'}}>INSCRIPTION</Text>
+        <Text style={{fontWeight:'bold', fontSize:24, color: 'black'}}>INSCRIPTION</Text>
+        <View style={{width:190, height:190,borderRadius:1000, overflow:'hidden'}}>
           <Image
             source={require('../../../assets/img/mobileLogin.gif')}
             style={styles.image}
           />
+        </View>
           {/* ************************* MAIL ************************ */}
           <View style={styles.emailBox}>
             <Controller
@@ -134,7 +136,7 @@ const RegisterForm = ({navigation}) => {
                 />
               )}
               name="password"
-              defaultValue=""
+              defaultValue="Abcdef1!"
             />
             <Icon
               name={hidePass ? 'eye-off' : 'eye'}
@@ -169,7 +171,7 @@ const RegisterForm = ({navigation}) => {
                 />
               )}
               name="passwordVerify"
-              defaultValue=""
+              defaultValue="Abcdef1!"
             />
             <Icon
               name={hidePass2 ? 'eye-off' : 'eye'}
@@ -212,7 +214,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 25,
-    backgroundColor: '#FEFEFE',
+    // backgroundColor: '#FEFEFE',
     padding: 5,
     width: '95%',
     marginTop: '20%',
