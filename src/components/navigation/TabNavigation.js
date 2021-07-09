@@ -8,6 +8,7 @@ const Tab = createBottomTabNavigator();
 
 import LogNavigationScreen from './screen/LogNavigationScreen' ;
 import ToDoNavigationScreen from './screen/ToDoNavigationScreen';
+import ProfilNavigationScreen from './screen/ProfilNavigationScreen';
 
 
 const TabNavigation = (props) => {
@@ -16,6 +17,7 @@ const TabNavigation = (props) => {
     return (
 
             <Tab.Navigator
+            
                 tabBarOptions={{
                     activeTintColor: '#FFF',
                     inactiveTintColor: '#FFF',

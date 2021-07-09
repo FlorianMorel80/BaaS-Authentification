@@ -4,7 +4,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
 // ************Components ********************
-import ProfilScreen from '../../../screen/RegisterScreen';
+import ProfilScreen from '../../../screen/ProfilScreen';
 // ******************************************
 const Stack = createStackNavigator();
 

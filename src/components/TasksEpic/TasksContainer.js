@@ -1,6 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ImageBackground } from 'react-native';
-
+import {getApp} from '../../database/realmApp';
+import openRealm from '../../database/openRealm';
+import { ObjectId } from 'bson';
+import 'react-native-get-random-values';
 //------------Import components-------------------
 import TasksList from './TaksList';
 import TaskForm from './TaskForm';
@@ -10,8 +13,75 @@ import Header from '../_Shared/Header/';
 
 
 function TasksContainer(props) {
-    const [tasks, setTasks] = useState([
-        { id: new Date().getTime(), title: 'Nouvelle tâches', completed: false }]);
+    
+
+        async function createTask(taskName) {
+            const app = getApp();
+            const currentUser = app.currentUser;
+        
+            const realm = await openRealm();
+        
+            realm.write(() => {
+            let tasks = realm.create(
+                'Task',
+                {
+                    _id: ObjectId(),
+                    _partition: currentUser.id,
+                    name: taskName,
+                    status: 'open',
+                },
+                'modified',
+            );
+            let user = realm.objectForPrimaryKey('User', ObjectId(currentUser.id));
+            // let user = realm.objects('User')
+            console.log('VOILAAAAAA', user.tasks);
+        
+            realm.create(
+                'User',
+                {
+                ...user,
+                _id: ObjectId(currentUser.id),
+                tasks: [...user.tasks, tasks],
+                },
+                'modified',
+            );
+            });
+        }
+
+
+    const [tasks, setTasks] = useState([]);
+       
+    // afficher la liste des taches
+  useEffect(() => {
+    let realm;
+    let tasks;
+    const bootstrapAsync = async () => {
+      try {
+        realm = await openRealm();
+        tasks = realm.objects('Task');
+
+        setTasks([...tasks]);
+
+        // Ecoute les changement dans la liste
+
+        tasks.addListener(() => {
+          // mettre le state avec les nouvelles valeurs
+          setTasks([...tasks]);
+        });
+      } catch (error) {
+        console.log(error);
+      } 
+    };
+    bootstrapAsync();
+
+    return () => {
+      const bootstrapAsync = async () => {
+        await tasks.removeAllListeners();
+        await realm.close();
+      };
+      bootstrapAsync();
+    };
+  }, []);
 
     const [isFormOpened, setIsFormOpened] = useState(false);
 
@@ -24,34 +94,27 @@ function TasksContainer(props) {
         setTasks([newTask, ...tasks]);
     };
 
-    const onChangeStatus = id => {
-        let newTasks = [];
 
-        tasks.forEach(task => {
-            if (task.id === id) {
-                newTasks.push({
-                    id: id,
-                    title: task.title,
-                    completed: !task.completed
-                });
-            } else {
-                newTasks.push(task);
-            }
+
+    async function onChangeStatus(task) {
+        const newStatus = task.status === 'done' ? 'open' : 'done';
+    
+        const realm = await openRealm();
+    
+        realm.write(() => {
+          task.status = newStatus;
         });
-
-        setTasks(newTasks);
-    };
-
-    const onDeleteTask = id => {
-        let newTasks = []
-
-        tasks.forEach(task => {
-            if (task.id !== id) {
-                newTasks.push(task);
-            }
+      }
+    
+      const onDeleteTask = async (task) => {
+        const realm = await openRealm();
+    
+        realm.write(() => {
+          realm.delete(task);
         })
-        setTasks(newTasks)
-    }
+    
+        task = null;
+      };
 
     const getTasksCompleted = () => {
         let counters = 0
@@ -75,11 +138,11 @@ function TasksContainer(props) {
             <ImageBackground source={image} resizeMode="cover" style={styles.image}>
                 
                 <Header/>
-                {isFormOpened && <TaskForm onAddTask={onAddTask} />}
+                {isFormOpened && <TaskForm onAddTask={onAddTask} createTask={createTask} />}
                 
                 <CountersContainer
                     nbTasks={tasks.length}
-                    nbTasksCompleted={tasks.filter(task => task.completed).length}
+                    nbTasksCompleted={tasks.filter(task => task.status === 'done').length}
                 />
                 <TasksList tasks={tasks} onChangeStatus={onChangeStatus} onDeleteTask={onDeleteTask} />
                 <FloatingButton toggleForm={toggleForm} isFormOpened={isFormOpened} />

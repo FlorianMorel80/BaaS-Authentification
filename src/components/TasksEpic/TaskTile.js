@@ -1,10 +1,11 @@
 import React from 'react';
 import { Image, Text, View, StyleSheet, TouchableOpacity } from 'react-native';
 
-const TaskTile = ({ id, title, onChangeStatus, completed, onDeleteTask }) => {
+const TaskTile = ({ task, onChangeStatus, completed, onDeleteTask }) => {
     return (
         <TouchableOpacity
-            onPress={() => onChangeStatus(id)}
+            style={{backgroundColor:'rgba(000,000,000, 0.5)'}}
+            onPress={() => onChangeStatus(task)}
         >
 
             <View style={completed ? styles.taskItemDone : styles.taskItem}>
@@ -17,11 +18,11 @@ const TaskTile = ({ id, title, onChangeStatus, completed, onDeleteTask }) => {
                             ? require('../../../assets/img/iconCheck.png')
                             : require('../../../assets//img/iconCircle.png')}
                     />
-                    <Text style={completed ? styles.done : styles.nodone }>
-                        {title}
+                    <Text style={completed ? styles.donetxt : styles.nodone }>
+                        {task.name}
                     </Text>
                 </View>
-                <TouchableOpacity onPress={() => onDeleteTask(id)}>
+                <TouchableOpacity onPress={() => onDeleteTask(task)}>
                     <Image
                         style={styles.icon}
                         source={require('../../../assets/img/iconBin.png')}
@@ -44,6 +45,11 @@ const styles = StyleSheet.create({
         backgroundColor:'lightgreen',
         paddingLeft:20,
         borderRadius:40, 
+    },
+    donetxt:{
+        backgroundColor:'lightgreen',
+        paddingLeft:20,
+        borderRadius:40, 
         color:'black', 
         fontSize:16,
         textDecorationLine: 'line-through'
@@ -53,6 +59,7 @@ const styles = StyleSheet.create({
         fontSize:16,
         borderRadius:40, 
         color:'white', 
+         
     },
 
     taskItem: {
@@ -73,9 +80,6 @@ const styles = StyleSheet.create({
     subContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-     
-        
-
     },
 
     title: {

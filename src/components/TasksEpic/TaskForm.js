@@ -1,23 +1,25 @@
 import React, { useState } from 'react';
 import { View, TextInput, StyleSheet, TouchableOpacity, Text } from 'react-native';
 
-const TaskForm = ({ onAddTask }) => {
+const TaskForm = ({ onAddTask, createTask }) => {
     // On crée ici une valeur title et une méthode setTitle grâce à useState que j'importe de react
     // La valeur d'origine est une string vide
-    const [title, setTitle] = useState('')
+    const [title, setTitle] = useState('');
+    const [taskName, setTaskName] = useState('');
 
     const _onChangeText = value => {
         // setTitle qui va permettre de changer la valeur de title; cette nouvelle valeur correspond à = value => qui est le paramètre de la méthode _onChangeText
         setTitle(value);
     };
 
-
     const _onPressBtn = () => {
         if (title) {
             onAddTask(title);
             setTitle('');
+            createTask(title);
         }
     };
+
 
     return (
         <View style={styles.container}>

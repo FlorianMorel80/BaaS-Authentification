@@ -4,7 +4,8 @@ const UserSchema = {
         _id: "objectId",
         _partition: "string",
         name: "string",
-        tasks: "Task[]"
+        tasks: "Task[]", 
+        avatar: "string"
     },
     primaryKey: '_id'
 }

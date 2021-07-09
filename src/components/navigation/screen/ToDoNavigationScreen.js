@@ -5,6 +5,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 // ************Components ********************
 import TasksContainer from '../../TasksEpic/TasksContainer';
+import ProfilScreen from '../../../screen/ProfilScreen';
 // ******************************************
 const Stack = createStackNavigator();
 
@@ -21,11 +22,11 @@ const ToDoNavigationScreen = (props, { navigation, route}) => {
                     component={TasksContainer}/>
 
                 {/* <Stack.Screen
-                name="RegisterScreen"
+                name="ProfilScreen"
                 options={{
-                    title:'Retourner à la page de connexion'
+                    header: ()=> null,
                 }} 
-                component={RegisterScreen} /> */}
+                component={ProfilScreen}/> */}
             </Stack.Navigator>
 
     );

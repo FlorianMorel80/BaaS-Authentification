@@ -1,9 +1,13 @@
 // *************** React Components*****************************
-import React, {useState, useContext} from 'react';
+import React, {useState, useContext, useEffect} from 'react';
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import { Avatar } from 'react-native-elements';
+
 import {
   ScrollView,
   Text,
   StyleSheet,
+  Modal,
   TextInput,
   TouchableOpacity,
   View,
@@ -17,6 +21,9 @@ import {yupResolver} from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 
 import {AuthContext} from '../../redux/contexts/AuthContext';
+import { getApp } from '../../database/realmApp';
+import openRealm from '../../database/openRealm';
+import { ObjectId } from 'bson';
 // *************************************************************
 
 // ----------------------------REGEX--------------------------------
@@ -83,17 +90,140 @@ const LoginForm = ({navigation}) => {
     console.log(value);
   }
 
+
+   // ---------------OPTIONS POUR L'AJOUT D'IMAGE----------------
+
+    const [modalVisible, setModalVisible] = useState(false);
+    const [avatar, setAvatar] = useState(undefined);
+  useEffect(()  => {
+   
+    // 
+    (async () => {
+      const app = getApp();
+      const realm = await openRealm();
+      let user = realm.objectForPrimaryKey('User', ObjectId(app.currentUser.id));
+    setAvatar(user.avatar)
+    console.log(user.avatar);
+    })()
+    
+  },[])
+
+   const captureImage = {
+      mediaType: 'photo',
+      maxWidth: 300,
+      maxHeight: 550,
+      quality:1,
+      cameraType: 'front',
+      saveToPhotos: true, 
+  };
+
+
+  const addImage = async (img) => {
+    if(img.assets != undefined){
+      const uri = img.assets[0].uri 
+      setAvatar(uri);
+      const app = getApp();
+      const realm = await openRealm();
+      const user = realm.objectForPrimaryKey('User', ObjectId(app.currentUser.id))
+      realm.write(() => {
+        user.avatar = uri;
+      })
+    }
+
+    console.log(img);
+  }
+
+  const chooseFile =  {
+      mediaType: 'photo',
+      maxWidth: 300,
+      maxHeight: 550,
+      quality: 1,
+  };
+
+  //--------------------------------------------------------------
+
+
   return (
+
+    <>
+    <Modal
+      animationType="slide"
+      transparent={true}
+      visible={modalVisible}
+      onRequestClose={() => {
+        setModalVisible(!modalVisible);
+      }}>
+    <View style={styles.centeredView}>
+      <View style={styles.modalView}>
+      <TouchableOpacity
+        activeOpacity={0.5}
+        style={styles.upload}
+        onPress={() => launchCamera(captureImage, addImage)}>
+        <Icon name="add" style={{alignSelf:'center'}} size={60} color={'grey'} />
+        <Text
+          style={{
+            textAlign: 'center',
+            justifyContent: 'flex-end',
+            fontWeight: 'bold',
+            color: 'grey',
+          }}>
+          Prendre photo
+        </Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        activeOpacity={0.5}
+        style={styles.upload}
+        onPress={() => launchImageLibrary(chooseFile, addImage)}>
+        <Icon name="add" style={{alignSelf:'center'}} size={60} color={'grey'} />
+        <Text
+          style={{
+            textAlign: 'center',
+            justifyContent: 'flex-end',
+            fontWeight: 'bold',
+            color: 'grey',
+          }}>
+          Choisir image
+        </Text>
+      </TouchableOpacity>
+      </View>
+      </View>
+  </Modal>
     <ScrollView>
       <View style={styles.background}>
         <View style={styles.container}>
-        <Text style={{fontWeight:'bold', fontSize:24, color: 'black'}}>CONNEXION</Text>
-        <View style={{width:190, height:190,borderRadius:1000, overflow:'hidden'}}>
-          <Image
-            source={require('../../../assets/img/mobileLogin.gif')}
-            style={styles.image}
-          />
-        </View>
+        <Text style={{fontWeight:'bold', fontSize:24, color: 'white'}}>PROFIL</Text>
+        {avatar == undefined ? 
+        <View style={{flexDirection: 'row',}}>
+            <TouchableOpacity
+              activeOpacity={0.5}
+              style={styles.upload}
+              onPress={() => setModalVisible(true)}
+              
+            >
+              <Icon name="add" style={{alignSelf:'center'}} size={60} color={'grey'} />
+              <Text
+                style={{
+                  textAlign: 'center',
+                  justifyContent: 'flex-end',
+                  fontWeight: 'bold',
+                  color: 'grey',
+                }}>
+                Choisir image
+              </Text>
+            </TouchableOpacity>
+          </View>
+          : 
+          <Avatar
+            rounded
+            size='xlarge'
+            source={{
+              uri:avatar,
+            }}>
+            <Avatar.Accessory 
+            onPress={() => setModalVisible(true)}
+            size={50}
+            />
+          </Avatar>} 
           {/* ************************* MAIL ************************ */}
           <View style={styles.emailBox}>
             <Controller
@@ -160,19 +290,12 @@ const LoginForm = ({navigation}) => {
           <TouchableOpacity
             style={styles.button}
             onPress={() => handleSubmit(onSignIn)()}>
-            <Text style={styles.title}>Me connecter</Text>
+            <Text style={styles.title}>Modififier mes informations</Text>
           </TouchableOpacity>
-          <View style={styles.loginText}>
-            <Text>Pas encore inscrit ?</Text>
-            {}
-            <TouchableOpacity
-              onPress={() => navigation.navigate('RegisterScreen')}>
-              <Text style={{color: '#75CFB8'}}> S'inscrire</Text>
-            </TouchableOpacity>
-          </View>
         </View>
       </View>
     </ScrollView>
+    </>
   );
 };
 
@@ -193,6 +316,27 @@ const styles = StyleSheet.create({
     width: '97%',
     marginTop: '20%',
   },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5
+  },
   image: {
     flex: 1,
     height: 200,
@@ -206,9 +350,9 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     margin: 10,
     width: '80%',
-
+    marginTop:'20%',
     paddingHorizontal: 20,
-    backgroundColor: '#FBFBFB',
+    backgroundColor: 'rgba(999,999, 999, 0.8)',
     elevation: 2,
   },
   passwordBox: {
@@ -219,8 +363,9 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     margin: 8,
     width: '80%',
+    marginVertical:'10%',
     paddingHorizontal: 20,
-    backgroundColor: '#FBFBFB',
+    backgroundColor: 'rgba(999,999, 999, 0.8)',
     elevation: 2,
   },
   error: {
@@ -228,12 +373,11 @@ const styles = StyleSheet.create({
   },
   button: {
     flex: 1,
-    borderWidth: 1,
-    width: 140,
+    width: 190,
     height: 40,
     alignSelf: 'center',
     justifyContent: 'center',
-    backgroundColor: '#284065',
+    backgroundColor: '#4746C3',
     borderRadius: 25,
     margin: 10,
   },
