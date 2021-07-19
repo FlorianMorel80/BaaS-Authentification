@@ -1,4 +1,5 @@
 // *************** React Components*****************************
+import TouchID from 'react-native-touch-id';
 import React, {useState, useContext} from 'react';
 import {
   ScrollView,
@@ -83,6 +84,30 @@ const LoginForm = ({navigation}) => {
     console.log(value);
   }
 
+
+  // ---------Mise en place du TouchId ----------------
+  const openFingerTouchId = () => {
+    const optionalConfigObject = {
+      title: 'Authentication requise', // Android
+      imageColor: 'lightgreen', // Android
+      imageErrorColor: '#ff0000', // Android
+      sensorDescription: 'Identification par emprunte digitale', // Android
+      sensorErrorDescription: 'Erreur', // Android
+      cancelText: 'Annuler', // Android
+      fallbackLabel: 'Montrer le mot de passe', // iOS (if empty, then label is hidden)
+      unifiedErrors: false, // use unified error messages (default false)
+      passcodeFallback: false, // iOS - allows the device to fall back to using the passcode, if faceid/touch is not available. this does not mean that if touchid/faceid fails the first few times it will revert to passcode, rather that if the former are not enrolled, then it will use the passcode.
+    };
+    
+    TouchID.authenticate('', optionalConfigObject)
+      .then(success => {
+        AlertIOS.alert('Authentification réussie');
+      })
+      .catch(error => {
+        AlertIOS.alert('Erreur dans l\'authentification');
+      });
+  }
+  // --------------------------------------------------
   return (
     <ScrollView>
       <View style={styles.background}>
@@ -157,6 +182,11 @@ const LoginForm = ({navigation}) => {
 
 
           {/* ************************* BUTTON ************************ */}
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => openFingerTouchId()}>
+            <Text style={styles.title}>TouchId</Text>
+          </TouchableOpacity>
           <TouchableOpacity
             style={styles.button}
             onPress={() => handleSubmit(onSignIn)()}>

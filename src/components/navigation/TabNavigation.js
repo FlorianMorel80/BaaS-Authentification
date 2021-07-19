@@ -3,7 +3,7 @@ import {ImageBackground, StyleSheet, Image} from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 // import { Icon } from 'react-native-elements'
-
+import Ionicons from 'react-native-vector-icons/Ionicons';
 const Tab = createBottomTabNavigator();
 
 import LogNavigationScreen from './screen/LogNavigationScreen' ;
@@ -17,7 +17,24 @@ const TabNavigation = (props) => {
     return (
 
             <Tab.Navigator
-            
+                screenOptions={({ route }) => ({
+                    tabBarIcon: ({ focused, color, size }) => {
+                        let iconName;
+                        switch (route.name) {
+                            case "Profil":
+                                iconName = 'person-circle-outline';
+                                break;
+                            case "Vos Tâches":
+                                iconName = 'list-circle-outline';
+                                break;
+                        }
+
+                        iconName = `${Platform.OS === "ios" ? "ios-" : "md-"}${iconName}`
+
+                        // You can return any component that you like here!
+                        return <Ionicons name={iconName} size={size} color={color} />;
+                    },
+                })}
                 tabBarOptions={{
                     activeTintColor: '#FFF',
                     inactiveTintColor: '#FFF',
@@ -28,15 +45,8 @@ const TabNavigation = (props) => {
             >
                 {/* <Image 
                 source={require('../../../assets/img/splash.png')}/> */}
-                <Tab.Screen name="Vos Tâches"
-                option={{
-                 tabBarIcon: ({size,focused,color}) => {
-                    return (
-                        <Image style={{width:20, height:20}} source={require('../../../assets/img/splash.png')} />
-                    );
-                  }}}
-                  >
-                   
+                <Tab.Screen name="Vos Tâches">
+                
                     {() => <ToDoNavigationScreen data={data} />}
                 </Tab.Screen>
                 <Tab.Screen name="Profil">

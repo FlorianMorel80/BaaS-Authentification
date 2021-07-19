@@ -216,6 +216,10 @@ const LoginForm = ({navigation}) => {
           <Avatar
             rounded
             size='xlarge'
+
+
+
+            
             source={{
               uri:avatar,
             }}>
