@@ -46,13 +46,12 @@ const TabNavigation = (props) => {
                 {/* <Image 
                 source={require('../../../assets/img/splash.png')}/> */}
                 <Tab.Screen name="Vos Tâches">
-                
                     {() => <ToDoNavigationScreen data={data} />}
                 </Tab.Screen>
                 <Tab.Screen name="Profil">
                     {() => <ProfilNavigationScreen data={data}/>}
                 </Tab.Screen> 
-                 {/* <Tab.Screen name="Profil">
+                    {/* <Tab.Screen name="Profil">
 
                 </Tab.Screen> */}
             </Tab.Navigator>

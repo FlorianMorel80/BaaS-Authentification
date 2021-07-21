@@ -3,6 +3,9 @@ import React, {useState, useContext, useEffect} from 'react';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import { Avatar } from 'react-native-elements';
 
+// import ReactNativeBiometrics from 'react-native-biometrics'
+import CameraRolling from '../CameraRoll';
+
 import {
   ScrollView,
   Text,
@@ -91,8 +94,7 @@ const LoginForm = ({navigation}) => {
   }
 
 
-   // ---------------OPTIONS POUR L'AJOUT D'IMAGE----------------
-
+// ---------------OPTIONS POUR L'AJOUT D'IMAGE----------------
     const [modalVisible, setModalVisible] = useState(false);
     const [avatar, setAvatar] = useState(undefined);
   useEffect(()  => {
@@ -139,9 +141,10 @@ const LoginForm = ({navigation}) => {
       maxHeight: 550,
       quality: 1,
   };
+//--------------------------------------------------------------
 
-  //--------------------------------------------------------------
-
+// Ajout de la clé d'authentification TOUCH ID / Biometrics
+// --------------------------------------------------------
 
   return (
 
@@ -298,6 +301,7 @@ const LoginForm = ({navigation}) => {
           </TouchableOpacity>
         </View>
       </View>
+      <CameraRolling />
     </ScrollView>
     </>
   );

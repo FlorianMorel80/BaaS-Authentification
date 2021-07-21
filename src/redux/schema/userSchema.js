@@ -5,7 +5,8 @@ const UserSchema = {
         _partition: "string",
         name: "string",
         tasks: "Task[]", 
-        avatar: "string"
+        avatar: "string", 
+        // touchID: "string",
     },
     primaryKey: '_id'
 }

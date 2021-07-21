@@ -17,6 +17,9 @@ import {yupResolver} from '@hookform/resolvers/yup';
 // import Input from "@material-ui/core/Input";
 import * as yup from 'yup';
 
+import * as Keychain from 'react-native-keychain'
+
+
 import {AuthContext} from '../../redux/contexts/AuthContext';
 // *************************************************************
 
@@ -101,10 +104,12 @@ const LoginForm = ({navigation}) => {
     
     TouchID.authenticate('', optionalConfigObject)
       .then(success => {
-        AlertIOS.alert('Authentification réussie');
+        alert('Authentification réussie');
+        // handleSubmit(onSignIn)
       })
       .catch(error => {
-        AlertIOS.alert('Erreur dans l\'authentification');
+        alert('Erreur dans l\'authentification');
+        
       });
   }
   // --------------------------------------------------
