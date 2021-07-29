@@ -4,7 +4,7 @@ import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import { Avatar } from 'react-native-elements';
 
 // import ReactNativeBiometrics from 'react-native-biometrics'
-import CameraRolling from '../CameraRoll';
+// import CameraRolling from '../CameraRoll';
 
 import {
   ScrollView,
@@ -301,7 +301,7 @@ const LoginForm = ({navigation}) => {
           </TouchableOpacity>
         </View>
       </View>
-      <CameraRolling />
+      {/* <CameraRolling /> */}
     </ScrollView>
     </>
   );

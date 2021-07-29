@@ -4,7 +4,7 @@ import { getApp } from './realmApp';
 
 export default async function openRealm() {
   let realm;
-
+// Permet la connexion à la base de données 
   const app = getApp();
 
   try {
@@ -13,6 +13,7 @@ export default async function openRealm() {
       schema: [TaskSchema, UserSchema],
       sync: {
         user: app.currentUser,
+        // Récupère l'id seulement si l'user est connecté 
         partitionValue: app.currentUser?.id,
       },
     };
